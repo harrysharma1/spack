@@ -14,6 +14,13 @@
 #show attr/3.
 #show attr/4.
 
+#show mattr/2.
+#show mattr/3.
+#show mattr/4.
+#defined mattr/2.
+#defined mattr/3.
+#defined mattr/4.
+
 % names of optimization criteria
 #show opt_criterion/2.
 

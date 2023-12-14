@@ -370,6 +370,25 @@ def remove_node(
     return [func for func in functions if func.args[0] not in ("node", "virtual_node")]
 
 
+def transform_my_version(
+    required: spack.spec.Spec, imposed: spack.spec.Spec, funcs: List[AspFunction]
+) -> List[AspFunction]:
+    """Replace symbolic "my" version with reference to dependent's version."""
+    result = []
+    for f in funcs:
+        if f.args[0] == "node_version_satisfies" and str(f.args[2]) == "my.version":
+            _, dep_name, *_ = f.args
+            result.append(
+                fn.attr(
+                    "sync", dep_name, "node_version_satisfies", fn.attr("version", required.name)
+                )
+            )
+            continue
+        result.append(f)
+
+    return result
+
+
 def _create_counter(specs, tests):
     strategy = spack.config.CONFIG.get("concretizer:duplicates:strategy", "none")
     if strategy == "full":
@@ -1671,7 +1690,7 @@ class SpackSolverSetup:
                     name=pkg.name,
                     msg=msg,
                     transform_required=[track_dependencies],
-                    transform_imposed=[remove_node, dependency_holds],
+                    transform_imposed=[remove_node, dependency_holds, transform_my_version],
                 )
 
                 self.gen.newline()
