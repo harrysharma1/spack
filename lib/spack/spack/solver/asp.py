@@ -13,7 +13,7 @@ import pprint
 import re
 import types
 import warnings
-from typing import Callable, Dict, List, NamedTuple, Optional, Sequence, Set, Tuple, Union
+from typing import Any, Callable, Dict, List, NamedTuple, Optional, Sequence, Set, Tuple, Union
 
 import archspec.cpu
 
@@ -1775,7 +1775,7 @@ class SpackSolverSetup:
                         required_spec=when_spec,
                         imposed_spec=spec,
                         name=pkg_name,
-                        transform_imposed=transform,
+                        transform_imposed=[transform],
                         msg=f"{spec_str} is a requirement for package {pkg_name}",
                     )
                 except Exception as e:
